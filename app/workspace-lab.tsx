@@ -5,7 +5,7 @@ import {Project,projectFinance,day,localDate,deadline} from '../lib/projects';
 import {SmoothCollapse} from './motion';
 import {money} from './project-form';
 import {serializeCsv} from '../lib/csv';
-export function exportProjects(projects:Project[]){const rows=[['Client','Profile','Total USD','Fee USD','Net USD','People','Per person USD','Collaborators','Status','Deadline date','Deadline time'],...projects.map(p=>{const f=projectFinance(p);return [p.client,p.profile,f.total,f.fee,f.net,f.people,f.share,f.members.join(', '),p.status,p.date,p.time]})];const blob=new Blob([serializeCsv(rows)],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='fivertask-projects-'+day(0)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+export function exportProjects(projects:Project[]){const rows=[['Client','Profile','Total USD','Fee USD','Net USD','People','Per person USD','Collaborators','Status','Deadline date','Deadline time'],...projects.map(p=>{const f=projectFinance(p);return [p.client,p.profile,f.total,f.fee,f.net,f.people,f.share,f.members.join(', '),p.status,p.date,p.time]})];const blob=new Blob([serializeCsv(rows)],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='fiverrtask-projects-'+day(0)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 export default function WorkspaceLab({projects,onOpen,onFilter}:{projects:Project[];onOpen:(p:Project)=>void;onFilter:(filter:string)=>void}){
  const [expanded,setExpanded]=useState(true),[metric,setMetric]=useState<'scheduled'|'earned'>('scheduled'),[period,setPeriod]=useState(7),[selected,setSelected]=useState('');
  const anchor=day(0);

@@ -1,4 +1,4 @@
-# FiverTask
+# FiverrTask
 
 Next.js freelance project workspace and a local keyword rewriter.
 
@@ -46,7 +46,7 @@ Live Firebase checks covered authenticated reads, owner writes, foreign-write/de
 
 ## Latest interface updates
 
-FiverTask has a custom animated brand loader. Dialogs, mobile options and expandable panels have enter/exit transitions and respect reduced-motion preferences. The rewriter uses a compact desktop toolbar, additional tools below the editors, and a glass options sheet on phones. Project actions occupy their own row on smaller screens.
+FiverrTask has a custom animated brand loader. Dialogs, mobile options and expandable panels have enter/exit transitions and respect reduced-motion preferences. The rewriter uses a compact desktop toolbar, additional tools below the editors, and a glass options sheet on phones. Project actions occupy their own row on smaller screens.
 
 Projects accept an optional HTTP/HTTPS sheet URL, available directly beside the client name and in project details. Unsafe protocols and embedded credentials are rejected. The matching optional field validation is published in Firestore rules.
 
