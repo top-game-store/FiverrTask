@@ -1,0 +1,13 @@
+﻿'use client';
+import {useState} from 'react';
+import {ChevronLeft,ChevronRight,CalendarDays,X} from 'lucide-react';
+import {calendarMonth} from '../lib/calendar';
+import {Project,localDate} from '../lib/projects';
+export default function DeadlineCalendar({projects,selectedDate,onSelect}:{projects:Project[];selectedDate:string;onSelect:(date:string)=>void}){
+ const [month,setMonth]=useState(()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1)});
+ const today=localDate(new Date()),year=month.getFullYear(),index=month.getMonth();
+ const cells=calendarMonth(year,index);
+ function move(n:number){setMonth(new Date(year,index+n,1))}
+ const selected=projects.filter(p=>p.date===selectedDate);
+ return <aside className="deadline-calendar" aria-label="Deadline calendar"><div className="calendar-title"><h2><CalendarDays size={18}/>Calendar</h2><button onClick={()=>{const d=new Date();setMonth(new Date(d.getFullYear(),d.getMonth(),1));onSelect('')}}>Today</button></div><div className="calendar-month"><button aria-label="Previous month" onClick={()=>move(-1)}><ChevronLeft size={18}/></button><h3 aria-live="polite">{month.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</h3><button aria-label="Next month" onClick={()=>move(1)}><ChevronRight size={18}/></button></div><div className="calendar-weekdays">{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=><span key={d}>{d}</span>)}</div><div className="calendar-grid">{cells.map(d=>{const date=localDate(d),items=projects.filter(p=>p.date===date);return <button key={date} aria-label={`${d.toLocaleDateString('en-US',{dateStyle:'full'})}, ${items.length} deadlines`} aria-pressed={selectedDate===date} aria-current={date===today?'date':undefined} className={(d.getMonth()!==index?'outside-month ':'')+(date===today?'is-today ':'')+(selectedDate===date?'is-selected':'')} onClick={()=>{onSelect(selectedDate===date?'':date);if(d.getMonth()!==index)setMonth(new Date(d.getFullYear(),d.getMonth(),1))}}><span>{d.getDate()}</span><i className="calendar-dots">{items.slice(0,3).map(p=><b key={p.id} className={p.status==='completed'?'delivered':''}/>)}</i></button>})}</div><div className="calendar-legend"><span><i/>Pending</span><span><i className="delivered"/>Completed</span></div>{selectedDate?<div className="calendar-selection"><div><strong>{new Date(selectedDate+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}</strong><button onClick={()=>onSelect('')} aria-label="Clear calendar date"><X size={15}/></button></div><p>{selected.length?`${selected.length} deadline${selected.length===1?'':'s'} shown in the list`:'No deadlines on this day.'}</p></div>:<p className="calendar-hint">Select a date to see its deadlines.</p>}</aside>
+}

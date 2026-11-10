@@ -1,0 +1,2 @@
+﻿export function BrandMark(){return <span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path className="brand-f" d="M9 24V8h14M9 15h10" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/><path className="brand-check" d="m16 23 4 4 8-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg></span>}
+export default function Brand(){return <><BrandMark/><span className="brand-wordmark">Fiver<span>Task</span></span></>}

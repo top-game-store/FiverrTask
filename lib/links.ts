@@ -1,0 +1,2 @@
+﻿export function normalizeSheetUrl(value:string){const raw=value.trim();if(!raw)return '';if(raw.length>2048)throw Error('The sheet URL is too long.');let url:URL;try{url=new URL(raw)}catch{throw Error('Enter a complete sheet URL, starting with https://.')}if(!['https:','http:'].includes(url.protocol)||url.username||url.password)throw Error('Use a valid http or https sheet URL.');return url.href}
+export function safeSheetUrl(value?:string){try{return normalizeSheetUrl(value||'')}catch{return ''}}

@@ -1,0 +1,6 @@
+﻿'use client';
+import {useEffect,useRef,useState,type HTMLAttributes,type ReactNode} from 'react';
+export function Presence({show,children,className='',...props}:{show:boolean;children:ReactNode}&HTMLAttributes<HTMLDivElement>){const [mounted,setMounted]=useState(show),[visible,setVisible]=useState(show);const content=useRef(children);if(show)content.current=children;
+ useEffect(()=>{let a=0,b=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(show){setMounted(true);a=requestAnimationFrame(()=>{b=requestAnimationFrame(()=>setVisible(true))})}else{setVisible(false)}const t=!show?setTimeout(()=>setMounted(false),reduced?0:230):undefined;return()=>{cancelAnimationFrame(a);cancelAnimationFrame(b);clearTimeout(t)}},[show]);
+ return mounted?<div {...props} className={'presence '+className} data-state={visible&&show?'open':'closed'} aria-hidden={!show||undefined}>{show?children:content.current}</div>:null}
+export function SmoothCollapse({open,children,className='',id}:{open:boolean;children:ReactNode;className?:string;id?:string}){return <div className={'smooth-collapse '+className} data-open={open} aria-hidden={!open} inert={!open} id={id}><div className="smooth-collapse-inner">{children}</div></div>}
