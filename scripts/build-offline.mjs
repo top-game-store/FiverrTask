@@ -4,7 +4,7 @@ import ts from 'typescript';
 const core=ts.transpileModule(fs.readFileSync('lib/rewriter.ts','utf8').replaceAll('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.None}}).outputText;
 const keywords=fs.readFileSync('lib/keywords.json','utf8');
 const template=fs.readFileSync('scripts/offline-template.html','utf8');
-fs.writeFileSync('public/offline.html',template.replace('/* REWRITE_CORE */',core).replace('/* KEYWORDS */',keywords));
+fs.writeFileSync('public/offline.html',template.replace('/* REWRITE_CORE */',()=>core).replace('/* KEYWORDS */',()=>keywords));
 const assets=['/offline.html','/icon-192.png','/icon-512.png','/icon-maskable.png','/apple-touch-icon.png','/manifest.webmanifest'];
 const version=crypto.createHash('sha256').update(fs.readFileSync('public/offline.html')).digest('hex').slice(0,12);
 fs.writeFileSync('public/sw.js',`const CACHE='fivertask-offline-${version}';
