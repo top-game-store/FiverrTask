@@ -1,4 +1,4 @@
-const CACHE='fivertask-offline-52afdcdf9ca5';
+const CACHE='fivertask-offline-683e8fff7b84';
 const ASSETS=["/offline.html","/icon-192.png","/icon-512.png","/icon-maskable.png","/apple-touch-icon.png","/manifest.webmanifest"];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('fivertask-offline-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
