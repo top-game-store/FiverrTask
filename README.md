@@ -1,4 +1,4 @@
-﻿# Folio
+# FiverTask
 
 Next.js freelance project workspace and a local keyword rewriter.
 
@@ -40,7 +40,7 @@ Drafts, custom keywords and the last 15 explicitly rewritten/copied messages sta
 
 Surfaces use 8-10px corner radii, light/dark themes and short entrance animations with a reduced-motion override. The calendar opens in a dialog.
 
-`npm test` runs 24 tests, including fee/split calculations, collaborator parsing, countdowns, date handling, calendar boundaries and rewriting. `npm run build` validates TypeScript and production output.
+`npm test` runs 28 tests, including fee/split calculations, collaborator parsing, countdowns, date handling, calendar boundaries and rewriting. `npm run build` validates TypeScript and production output.
 
 Live Firebase checks covered authenticated reads, owner writes, foreign-write/deletion denial, combined fields and invalid-data rejection. Browser checks covered adding a combined project, its fee preview/details, completion value/count and removal. All temporary QA projects, profiles and authentication accounts were deleted after testing.
 
