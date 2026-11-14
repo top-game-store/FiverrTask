@@ -12,7 +12,7 @@ service cloud.firestore {
     }
     function validProject() {
       let d = request.resource.data;
-      return d.keys().hasOnly(['id','ownerId','client','profile','price','totalAmount','combined','collaborators','date','time','status','extensions','createdAt','completedAt','sheetUrl'])
+      return d.keys().hasOnly(['id','ownerId','client','profile','price','totalAmount','combined','collaborators','date','time','status','extensions','createdAt','completedAt','sheetUrl','orderId','orderKey'])
         && d.keys().hasAll(['id','ownerId','client','profile','price','date','time','status','extensions'])
         && d.id is int && d.ownerId is string
         && d.client is string && d.client.size() > 0 && d.client.size() <= 80
@@ -24,12 +24,21 @@ service cloud.firestore {
         && d.status in ['pending','completed']
         && d.extensions is int && d.extensions >= 0;
     }
+    function validOrder(projectId) {
+      let d = request.resource.data;
+      return d.keys().hasAll(['orderId','orderKey']) && d.orderId is string
+        && d.orderId.matches('^[A-Z0-9][A-Z0-9_-]{0,79}$') && d.orderKey == d.orderId
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/orderIds/$(d.orderKey)).data.projectId == projectId;
+    }
     match /projects/{projectId} {
-      allow read: if signedIn() && resource.data.ownerId == request.auth.uid;
-      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid && validProject();
+      allow get: if signedIn() && (!exists(/databases/$(database)/documents/projects/$(projectId)) || resource.data.ownerId == request.auth.uid);
+      allow list: if signedIn() && resource.data.ownerId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid && validProject() && validOrder(projectId);
       allow update: if signedIn() && resource.data.ownerId == request.auth.uid
-        && request.resource.data.ownerId == resource.data.ownerId && validProject();
-      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+        && request.resource.data.ownerId == resource.data.ownerId && validProject() && validOrder(projectId)
+        && (resource.data.get('orderId','') == '' || request.resource.data.orderId == resource.data.orderId);
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid
+        && (resource.data.get('orderKey','') == '' || !existsAfter(/databases/$(database)/documents/users/$(request.auth.uid)/orderIds/$(resource.data.orderKey)));
     }
     match /users/{userId} {
       allow read: if signedIn() && request.auth.uid == userId;
@@ -38,6 +47,17 @@ service cloud.firestore {
         && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 60
         && request.resource.data.image is string && request.resource.data.image.size() <= 700000;
       allow delete: if signedIn() && request.auth.uid == userId;
+      match /orderIds/{orderKey} {
+        allow read: if signedIn() && request.auth.uid == userId;
+        allow create: if signedIn() && request.auth.uid == userId
+          && request.resource.data.keys().hasOnly(['projectId']) && request.resource.data.projectId is string
+          && request.resource.data.projectId.matches('^[0-9]+$')
+          && getAfter(/databases/$(database)/documents/projects/$(request.resource.data.projectId)).data.ownerId == userId
+          && getAfter(/databases/$(database)/documents/projects/$(request.resource.data.projectId)).data.orderKey == orderKey;
+        allow update: if false;
+        allow delete: if signedIn() && request.auth.uid == userId
+          && !existsAfter(/databases/$(database)/documents/projects/$(resource.data.projectId));
+      }
     }
   }
 }

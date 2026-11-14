@@ -63,3 +63,13 @@ After the first online visit, wait for Offline ready. Subsequent offline navigat
 ## Private dashboards
 
 Firestore subscriptions query projects by the signed-in ownerId and subscribe only to that user's profile document. Read rules enforce the same owner boundary. Statistics, calendars, profile filters and project lists derive only from this private query. Profile inputs use plain text without datalist arrows. Mobile project cards have separate surfaces and 22px spacing with straight action dividers.
+
+## Order IDs and remaining value
+
+Summary cards show In progress, Completed value, Remaining value and total Project value. Monetary summaries use the owner's share after the platform fee and any split.
+
+New projects require an Order ID. IDs are trimmed, accept an optional leading #, and normalize to uppercase. They must use 1-80 letters, numbers, hyphens or underscores. A private per-user reservation is committed atomically with the project, so concurrent duplicate submissions cannot create two projects. Assigned IDs are immutable. Deleting a project atomically releases its reservation.
+
+Signed-in users with legacy projects missing IDs receive a list with per-project inputs, including completed projects. Saving an ID changes only the order fields. Once no IDs are missing, no reminder is shown. Dismissing the reminder defers it until the next visit, with an Add Order IDs button available in Projects.
+
+Run `npm test` for unit tests. With Java 21+ installed, `npm run test:rules` starts the official Firestore emulator in the demo-fiverrtask project and verifies actual transactions, concurrent duplicates, migration preservation, reservation cleanup and private reads. No production records are used by this test suite.
