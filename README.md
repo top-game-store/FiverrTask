@@ -17,7 +17,7 @@ The local `.env.local` connects to Firebase project `folio-workspace`. It is ign
 
 Email/password and Google Authentication are enabled. Localhost is authorized. Add your production domain in Firebase Authentication before deploying there. The first Google sign-in still requires the person to choose their Google account.
 
-Cloud Firestore is in `asia-south1` (Mumbai). `firestore.rules` contains the deployed rules. Email-verified members can view shared projects and member profiles. Only the owner can create, edit or remove their records. New accounts start without sample projects. No service account credentials are shipped to the browser.
+Cloud Firestore is in `asia-south1` (Mumbai). `firestore.rules` contains the deployed rules. Each verified user can read only their own projects and profile. Project queries are scoped to the signed-in owner. Only the owner can create, edit or remove their records. New accounts start without sample projects. No service account credentials are shipped to the browser.
 
 ## Projects
 
@@ -59,3 +59,7 @@ The footer Install app button uses the native browser install prompt when availa
 After the first online visit, wait for Offline ready. Subsequent offline navigations open a self-contained rewriter without Firebase dependencies. It uses the same generated rewrite engine and keyword dictionary as the online app; drafts, custom keywords and history share the same browser storage. Projects and authentication require internet. Clearing site data removes the offline copy.
 
 `npm run build` generates versioned offline assets before building Next.js. New offline versions activate after a successful complete precache. No project/auth/API responses are cached by the worker.
+
+## Private dashboards
+
+Firestore subscriptions query projects by the signed-in ownerId and subscribe only to that user's profile document. Read rules enforce the same owner boundary. Statistics, calendars, profile filters and project lists derive only from this private query. Profile inputs use plain text without datalist arrows. Mobile project cards have separate surfaces and 22px spacing with straight action dividers.
